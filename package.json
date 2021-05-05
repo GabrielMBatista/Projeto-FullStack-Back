@@ -1,0 +1,46 @@
+{
+  "name": "projeto-fullstack-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@types/knex": "^0.16.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.6.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.95.4",
+    "mysql": "^2.18.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.23",
+    "@types/jsonwebtoken": "^8.5.1",
+    "@types/node": "^15.0.2",
+    "@types/uuid": "^8.3.0",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.6",
+    "ts-node-dev": "^1.1.6",
+    "typescript": "^4.2.4"
+  },
+  "scripts": {
+    "dev": "clear && ts-node-dev --transpile-only ./src/index.ts",
+    "start": "tsc && node ./build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielMBatista/Projeto-FullStack-Back.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GabrielMBatista/Projeto-FullStack-Back/issues"
+  },
+  "homepage": "https://github.com/GabrielMBatista/Projeto-FullStack-Back#readme"
+}
