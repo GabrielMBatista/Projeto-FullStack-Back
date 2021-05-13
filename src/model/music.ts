@@ -1,100 +1,36 @@
-export class User {
-  constructor(
-    private id: string,
-    private name: string,
-    private username: string,
-    private email: string,
-    private password: string,
-    private role: UserRole
-  ) {}
+export class Musics {
+  constructor(private idMusics: string, private title: string) {}
 
-  getId() {
-    return this.id;
+  getIdMusics() {
+    return this.idMusics;
   }
 
-  getName() {
-    return this.name;
-  }
-  getUserName() {
-    return this.username;
+  getTitle() {
+    return this.title;
   }
 
-  getEmail() {
-    return this.email;
+  setIdMusics(idMusics: string) {
+    this.idMusics = idMusics;
   }
 
-  getPassword() {
-    return this.password;
+  setTitle(title: string) {
+    this.title = title;
   }
 
-  getRole() {
-    return this.role;
-  }
-
-  setId(id: string) {
-    this.id = id;
-  }
-
-  setName(name: string) {
-    this.name = name;
-  }
-
-  setUserName(username: string) {
-    this.username = username;
-  }
-
-  setEmail(email: string) {
-    this.email = email;
-  }
-
-  setPassword(password: string) {
-    this.password = password;
-  }
-
-  setRole(role: UserRole) {
-    this.role = role;
-  }
-
-  static stringToUserRole(input: string): UserRole {
-    switch (input) {
-      case "NORMAL":
-        return UserRole.NORMAL;
-      case "ADMIN":
-        return UserRole.ADMIN;
-      case "MODERADOR":
-        return UserRole.MODERADOR;
-      default:
-        throw new Error("Invalid user role");
-    }
-  }
-
-  static toUserModel(user: any): User {
-    return new User(
-      user.id,
-      user.name,
-      user.username,
-      user.email,
-      user.password,
-      User.stringToUserRole(user.role)
-    );
+  public static toMusic(data?: any) {
+    return data && new Musics
+    (   data.idMusics,
+        data.title
+       );
   }
 }
 
-export interface UserInputDTO {
-  email: string;
-  password: string;
-  name: string;
-  role: string;
-  username: string;
+export interface MusicInputDTO {
+  idMusics: string;
+  title: string;
 }
 
-export interface LoginInputDTO {
-  email: string;
-  password: string;
-}
-
-export enum UserRole {
-  NORMAL = "NORMAL",
-  MODERADOR = "MODERADOR",
-  ADMIN = "ADMIN",
+export interface MusicOutputDTO {
+  idMusics: string;
+  title: string;
 }

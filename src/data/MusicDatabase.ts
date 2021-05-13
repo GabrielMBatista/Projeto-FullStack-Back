@@ -1,14 +1,15 @@
-import { PlayList } from "../model/PlayList";
+import { Musics } from "../model/Music";
 import { BaseDatabase } from "./BaseDatabase";
 
-export class PlayListDatabase extends BaseDatabase {
+export class MusicDatabase extends BaseDatabase {
 
-    public async createPlayList(PlayList: PlayList): Promise<void> {
+    public async createMusic(Music: Musics): Promise<void> {
         await this.getConnection()
             .insert({
-                name: PlayList.getplayListName()
+                idMusics: Music.getIdMusics(),
+                title: Music.getTitle()
             })
-            .into(this.tableNames.playList)
+            .into(this.tableNames.musics)
     }
 
 }

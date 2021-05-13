@@ -1,67 +1,30 @@
-import { UserInputDTO, LoginInputDTO, User } from "../model/User"
-import { UserDatabase } from "../data/UserDatabase"
-import { IdGenerator } from "../services/IdGenerator"
-import { HashManager } from "../services/HashManager"
-import { Authenticator } from "../services/Authenticator"
-import { InvalidInputError } from "../error/InvalidInputError"
+import { MusicDatabase } from "../data/MusicDatabase";
+import { InvalidInputError } from "../error/InvalidInputError";
+import { UnauthorizedError } from "../error/UnauthorizedError";
+import { Musics, MusicInputDTO} from "../model/Music";
+import { UserRole } from "../model/User";
+import { Authenticator } from "../services/Authenticator";
 
-export class UserBusiness {
+export class MusicBusiness {
     constructor(
-        private userDatabase: UserDatabase,
-        private idGenerator: IdGenerator,
-        private hashManager: HashManager,
+        private musicDatabase: MusicDatabase,
         private authenticator: Authenticator
-    ) { }
+    ) {}
 
-    async createUser(user: UserInputDTO) { 
-        if (!user.email || !user.name ||  !user.username || !user.password || !user.role) {
-            throw new InvalidInputError("Invalid input to signUp")
+    async createMusic(input: MusicInputDTO, token: string) {
+        const tokenData = this.authenticator.getData(token)
+        if (tokenData.role !== UserRole.ADMIN) {
+            throw new UnauthorizedError("Only admins can access this feature")
         }
 
-        if (user.email.indexOf("@") === -1) {
-            throw new InvalidInputError("Invalid email format")
+        if (!input.title ) {
+            throw new InvalidInputError("Invalid input to Music")
         }
 
-        if (user.password && user.password.length < 6) {
-            throw new InvalidInputError("Password should have more than 6 digits")
-        }
-
-        const userId = this.idGenerator.generate()
-
-        const hashPassword = await this.hashManager.hash(user.password)
-
-        await this.userDatabase.createUser(
-            User.toUserModel({
-                ...user,
-                id: userId,
-                password: hashPassword
-            })
+        await this.musicDatabase.createMusic(
+            Musics.toMusic({
+                ...input,
+                 })
         )
-
-        const accessToken = this.authenticator.generateToken({ id: userId , role: user.role })
-
-        return accessToken
-    }
-
-    async authUserByEmail(user: LoginInputDTO) { 
-
-        if (!user.email || !user.password )
-        throw new InvalidInputError("Invalid input to login")
-
-
-        if (user.email.indexOf("@") === -1) {
-            throw new InvalidInputError("Invalid email format")
-        }
-
-        const userFromDB = await this.userDatabase.getUserByEmail(user.email)
-        const hashCompare = await this.hashManager.compare(user.password, userFromDB.getPassword())
-
-        if (!hashCompare) {
-            throw new InvalidInputError("Invalid password")
-        }
-
-        const accessToken = this.authenticator.generateToken({ id: userFromDB.getId(), role: userFromDB.getRole() })
-
-        return accessToken
     }
 }

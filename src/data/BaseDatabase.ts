@@ -7,6 +7,7 @@ export abstract class BaseDatabase {
   protected tableNames = {
     playList: "playList",
     users: "User",
+    musics:"Musics"
   };
 
   protected getConnection(): Knex {
