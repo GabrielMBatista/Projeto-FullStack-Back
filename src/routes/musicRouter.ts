@@ -1,11 +1,11 @@
 import express from "express"
-import {PlayListController } from "../controller/PlayListController"
+import {MusicController } from "../controller/MusicController"
 
 
-export const playListRouter = express.Router()
+export const musicRouter = express.Router()
 
-const playListController = new PlayListController()
+const musicController = new MusicController()
 
-playListRouter.put("/create", playListController.createPlayList)
+musicRouter.put("/create", musicController.createMusic)
 
 

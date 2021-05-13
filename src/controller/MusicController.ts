@@ -1,65 +1,35 @@
-import { Request, Response } from "express";
-import { UserInputDTO, LoginInputDTO} from "../model/User";
-import { UserBusiness } from "../business/UserBusiness";
-import { BaseDatabase } from "../data/BaseDatabase";
-import { UserDatabase } from "../data/UserDatabase";
-import { Authenticator } from "../services/Authenticator";
-import { HashManager } from "../services/HashManager";
-import { IdGenerator } from "../services/IdGenerator";
+import { Request, Response } from "express"
+import { MusicBusiness } from "../business/MusicBusiness"
+import { BaseDatabase } from "../data/BaseDatabase"
+import { MusicDatabase } from "../data/MusicDatabase"
+import { MusicInputDTO } from "../model/Music"
+import { Authenticator } from "../services/Authenticator"
 
-export class UserController {
-    async signup(req: Request, res: Response) {
+
+export class MusicController {
+    async  createMusic(req: Request, res: Response) {
         try {
+            const input: MusicInputDTO = {
+                idMusics:req.body.idMusics,
+                title:req.body.title
 
-            const input: UserInputDTO = {
-                email: req.body.email,
-                name: req.body.name,
-                username: req.body.username,
-                password: req.body.password,
-                role: req.body.role
             }
-
-            const userBusiness = new UserBusiness(
-                new UserDatabase,
-                new IdGenerator,
-                new HashManager,
+            const musicBusiness = new MusicBusiness(
+                new MusicDatabase,
                 new Authenticator
-            );
-            const token = await userBusiness.createUser(input);
+            )
 
-            res.status(200).send({ token });
-
-        } catch (error) {
-            res.status(400).send({ error: error.message });
+            await musicBusiness.createMusic(input, req.headers.authorization as string)
+            res.sendStatus(200).send({
+                message: 'Musica adicionada',
+            })
+        } catch (err) {
+            res.status(err.customErrorCode || 400).send({
+                message: err.message,
+            })
+        } finally {
+            await BaseDatabase.destroyConnection()
         }
-
-        await BaseDatabase.destroyConnection();
-    }
-
-    async login(req: Request, res: Response) {
-
-        try {
-
-            const loginData: LoginInputDTO = {
-                email: req.body.email,
-                password: req.body.password
-            };
-
-            const userBusiness = new UserBusiness(
-                new UserDatabase,
-                new IdGenerator,
-                new HashManager,
-                new Authenticator
-            );
-            const token = await userBusiness.authUserByEmail(loginData);
-
-            res.status(200).send({ token });
-
-        } catch (error) {
-            res.status(400).send({ error: error.message });
-        }
-
-        await BaseDatabase.destroyConnection();
     }
 
 }
